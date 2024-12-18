@@ -681,9 +681,7 @@ public class Chess {
         // Add the current game history entry to the history list
         gameHistory.add(history);
         positionHistoryCount.merge(hashBoard, 1, Integer::sum);
-        if (turn.equals(PieceColor.BLACK)) {
-            san.add(sanString);
-        }
+        san.add(sanString);
         return history;
     }
 
