@@ -671,7 +671,7 @@ public class Chess {
             if (chess.turn == PieceColor.BLACK) {
                 // If it's Black's turn, append the SAN to the last White move
                 String lastSan = san.removeLast();
-                san.add(lastSan + " " + toSAN(history));
+                sanString = lastSan + " " + toSAN(history);
             } else {
                 // If it's White's turn, add the SAN with the move number
                 sanString = toSAN(history);
