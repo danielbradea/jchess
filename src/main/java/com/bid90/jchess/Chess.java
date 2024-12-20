@@ -366,17 +366,17 @@ public class Chess {
         }
 
 
-        boolean isCheck = this.kingAttacked(turn.opposite());
+        boolean isCheck = this.kingAttacked(cloneChess.turn.opposite());
         boolean isCheckmate = false;
         boolean isDraw = false;
         boolean isStalemate = false;
 
+        var hasLegalMovesEmpty = generateLegalMoves(cloneChess.turn.opposite()).isEmpty();
 
-        var hasLegalMovesEmpty = generateLegalMoves(turn.opposite()).isEmpty();
         // Determine if the current move results in checkmate or stalemate
         if (isCheck && hasLegalMovesEmpty) {
             isCheckmate = true; // Checkmate occurs if the king is in check and no legal moves exist
-        } else if (!isCheck) {
+        } else if (!isCheck && hasLegalMovesEmpty) {
             isStalemate = true; // Stalemate occurs if the king is not in check and no legal moves exist
         }
 
@@ -751,10 +751,8 @@ public class Chess {
             // Skip empty squares or opponent pieces
             if (piece == null || !piece.getColor().equals(turn)) continue;
             var moveIndices = PieceMoveCalculator.calculatePieceMoves(this, sourceSquare);
-
             for (var targetSquare : moveIndices) {
                 var capturedPiece = board.get(targetSquare);
-
                 // Handle pawn promotion
                 if (piece.getType().equals("p") && ChessUtil.rank(targetSquare) == promotionRank) {
                     for (var promotionType : "qrnb".split("")) {
@@ -771,7 +769,7 @@ public class Chess {
         // Filter out illegal moves
         moves.removeIf(move -> {
             var clonedChess = copy();
-            return clonedChess.makeMove(move);
+            return !clonedChess.makeMove(move);
         });
 
         return moves;
@@ -880,7 +878,7 @@ public class Chess {
         castleRights = chessClone.castleRights;
         whiteKingPosition = chessClone.whiteKingPosition;
         blackKingPosition = chessClone.blackKingPosition;
-        turn = chessClone.turn;
+        turn = chessClone.turn.opposite();
         return true;
 
     }
